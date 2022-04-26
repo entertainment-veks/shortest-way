@@ -6,35 +6,38 @@ import (
 )
 
 const wayLegPattern = " -- %s --> %s" //costs, node_name
+const present = "present"
 
 // findShortestPath accept list of all nodes in the graph, source and target nodes
 // and returns the shortest path between source and target nodes, time which algorithm was working ang error
 func findShortestPath(costs map[string]model.Costs, sourceNode string, targetNode string) (string, time.Duration, error) {
-	startTime := time.Now()
 
 	//init
 	var currentNode string
 	var min int
 
-	v := map[string]int{}
+	visited := map[string]bool{}
 	d := map[string]int{}
 
-	ver := map[string]int{}
-	ver[targetNode] = 0
+	ver := []string{
+		targetNode,
+	}
 
 	for nodeName := range costs {
-		v[nodeName] = 1
+		visited[nodeName] = false
 		d[nodeName] = 1000000 //as some unreachable value
 	}
 	d[sourceNode] = 0
 
 	//algorithm
-	for currentNode != "PRESENT" {
-		currentNode = "PRESENT"
+	startTime := time.Now()
+
+	for currentNode != present {
+		currentNode = present
 		min = 1000000
 
 		for nodeName := range costs {
-			if v[nodeName] == 1 && d[nodeName] < min {
+			if visited[nodeName] == false && d[nodeName] < min {
 				min = d[nodeName]
 				currentNode = nodeName
 			}
@@ -49,7 +52,7 @@ func findShortestPath(costs map[string]model.Costs, sourceNode string, targetNod
 					}
 				}
 			}
-			v[currentNode] = 0
+			visited[currentNode] = true
 		}
 	}
 
@@ -59,10 +62,10 @@ func findShortestPath(costs map[string]model.Costs, sourceNode string, targetNod
 		for nodeName := range costs {
 			if costs[nodeName][targetNode] != 0 { //if connection exist
 				temp := weight - costs[nodeName][targetNode]
-				if temp == d[nodeName] { // значит из этой вершины и был переход
-					weight = temp         // сохраняем новый вес
-					targetNode = nodeName // сохраняем предыдущую вершину
-					ver[nodeName] = weight
+				if temp == d[nodeName] {
+					weight = temp
+					targetNode = nodeName
+					ver = append(ver, nodeName)
 				}
 			}
 		}
