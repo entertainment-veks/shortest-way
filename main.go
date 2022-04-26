@@ -31,5 +31,5 @@ func main() {
 
 	log.Printf("Shortest way founded in %s\n", time)
 
-	fmt.Printf("Shortest way is:\n%s", pathInfo)
+	fmt.Printf("Shortest way is:\n%s\n", pathInfo)
 }

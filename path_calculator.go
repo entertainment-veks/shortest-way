@@ -80,6 +80,5 @@ func findShortestPath(costs map[string]model.Costs, sourceNode string, targetNod
 		result += fmt.Sprintf(" -- %d --> %s", costs[ver[i]][ver[i-1]], ver[i-1])
 	}
 
-	result += "\n"
 	return result, endTime.Sub(startTime), nil
 }
