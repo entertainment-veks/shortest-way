@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"shortest-way/model"
 	"time"
 )
 
-const wayLegPattern = " -- %s --> %s" //costs, node_name
 const present = "present"
 
 // findShortestPath accept list of all nodes in the graph, source and target nodes
@@ -72,5 +72,14 @@ func findShortestPath(costs map[string]model.Costs, sourceNode string, targetNod
 	}
 
 	endTime := time.Now()
-	return "", endTime.Sub(startTime), nil
+
+	//constructing output
+
+	result := sourceNode
+	for i := len(ver) - 1; i != 0; i-- {
+		result += fmt.Sprintf(" -- %d --> %s", costs[ver[i]][ver[i-1]], ver[i-1])
+	}
+
+	result += "\n"
+	return result, endTime.Sub(startTime), nil
 }
